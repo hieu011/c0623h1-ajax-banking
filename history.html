@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/style-custom.css">
+    <link rel="stylesheet" href="/fontawesome-v5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/web-toast/src/webToast.css">
+    <title>Banking</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <header>
+            <nav class="navbar bg-navbar">
+                <div class="container-fluid">
+                    <h2>Transfer History</h2>
+                    <div class="d-flex">
+                        <a href="banking.html">
+                            <button class="btn btn-outline-light" id="btnShowModalCreate">
+                                <i class="fas fa-list"></i>
+                                List Persons
+                            </button>
+                        </a>
+                        
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="content">
+            <table class="table table-striped">
+                <tr style="background-color: #4caf50">
+                    <th>ID</th>
+                    <th>Sender Name</th>
+                    <th>Recipient Name</th>
+                    <th>Transfer Amount</th>
+                    <th>Fees</th>
+                    <th>Transaction Amount</th>
+                    <th>Date</th>
+                </tr>
+                <tbody id="history-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/jquery/jquery-3.5.1.min.js"></script>
+<script src="/jquery/jquery.validate.min.js"></script>
+<script src="/web-toast/src/webToast.js"></script>
+<script src="/app-base.js"></script>
+<script>
+    let histories = [];
+    const strBodyHistory = $("#history-body");
+
+    async function getAllHistories() {
+
+        return $.ajax({
+            type: 'GET',
+            url: 'http://localhost:3300/histories',
+            success: function (response) {
+                histories = response;
+
+                $.each(response, (index, item) => {
+                    const str = renderHistory(item);
+                    strBodyHistory.append(str);
+                })
+            }, error: function () {
+                webToast.Danger({
+                    status: 'Lỗi hệ thống',
+                    message: '',
+                    delay: 2000,
+                    align: 'topright'
+                });
+            }
+        })
+    }
+
+    const renderHistory = (obj) => {
+        const date = new Date(obj.date);
+        const formattedDate = date.toLocaleString();
+        return `
+        <tr>
+                    <td>${obj.id}</td>
+                    <td>${obj.senderName}</td>
+                    <td>${obj.recipientName}</td>
+                    <td>${obj.transferAmount}</td>
+                    <td>${obj.fee}</td>
+                    <td>${obj.totalAmount}</td>
+                    <td>${formattedDate}</td>
+                </tr>
+                    `
+    }
+
+    $(() => {
+        strBodyHistory.empty();
+        getAllHistories();
+    })
+</script>
+
+</html>
