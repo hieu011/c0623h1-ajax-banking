@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/style-custom.css">
+    <link rel="stylesheet" href="/fontawesome-v5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/web-toast/src/webToast.css">
+    <title>Banking</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <header>
+            <nav class="navbar bg-navbar">
+                <div class="container-fluid">
+                    <h2>List of customers</h2>
+                    <div class="d-flex">
+                        <a href="history.html">
+                            <button class="btn btn-outline-light" id="btnShowModalTransferInfo">
+                                <i class="fas fa-history"></i>
+                                Transfer histories
+                            </button>
+                        </a>
+                        
+                        <button class="btn btn-outline-light" id="btnShowModalCreate">
+                            <i class="fas fa-user-plus"></i>
+                            Add New Customer
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="content">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>FullName</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Balance</th>
+                        <th>Address</th>
+                        <th colspan="5" class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbCustomerBody">
+
+                    <!-- <p>.........content.............</p> -->
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Create -->
+    <div class="modal fade" id="modalCreate" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal create</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCreate" method="post">
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="fullNameCre">FullName</label>
+                                <input type="text" id="fullNameCre" name="fullNameCre" class="form-control">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="emailCre">Email</label>
+                                <input type="text" id="emailCre" name="emailCre" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="phoneCre">Phone</label>
+                                <input type="tel" id="phoneCre" name="phoneCre" class="form-control">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="addressCre">Address</label>
+                                <input type="text" id="addressCre" name="addressCre" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnCreate">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Update -->
+    <div class="modal fade" id="modalUpdate" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal update</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formUpdate" method="post">
+                        <div class="row mb-3">
+                            <input type="hidden" id="idUp">
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="fullNameUp">FullName</label>
+                                <input type="text" id="fullNameUp" name="fullNameUp" class="form-control">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="emailUp">Email</label>
+                                <input type="email" id="emailUp" name="emailUp" class="form-control">
+                            </div>
+
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="phoneUp">Phone</label>
+                                <input type="tel" id="phoneUp" name="phoneUp" class="form-control">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="addressUp">Address</label>
+                                <input type="text" id="addressUp" name="addressUp" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnUpdate">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Deposit-->
+    <div class="modal fade" id="modalDeposit">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal Deposit</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="error-area mb-3 hide"></div>
+                    <form id="formDes" method="post">
+                        <div class="row mb-3">
+                            <div class="col-lg-4">
+                                <label for="idDes">ID</label>
+                                <input type="text" name="idDes" id="idDes" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="fullNameDes">Fullname</label>
+                                <input type="text" name="fullNameDes" id="fullNameDes" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="emailDes">Email</label>
+                                <input type="text" name="emailDes" id="emailDes" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="balanceDes">Balance</label>
+                                <input type="text" name="balanceDes" id="balanceDes" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="amountDes">Transaction Amount(VND)</label>
+                                <input type="text" name="amountDes" id="amountDes" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btnDeposit" id="btnDeposit">Deposit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Withdraw-->
+    <div class="modal fade" id="modalWithdraw">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal Withdraw</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="error-area mb-3 hide"></div>
+                    <form id="formWdr" method="post">
+                        <div class="row mb-3">
+                            <div class="col-lg-4">
+                                <label for="idWdr">ID</label>
+                                <input type="text" name="idWdr" id="idWdr" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="fullNameWdr">Fullname</label>
+                                <input type="text" name="fullNameWdr" id="fullNameWdr" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="emailWdr">Email</label>
+                                <input type="text" name="emailWdr" id="emailWdr" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="balanceWdr">Balance</label>
+                                <input type="text" name="balanceWdr" id="balanceWdr" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="amountWdr">Transaction Amount(VND)</label>
+                                <input type="text" name="amountWdr" id="amountWdr" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btnWithdraw" id="btnWithdraw">Withdraw</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Transfer-->
+    <div class="modal fade" id="modalTransfer">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal Transfer</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="error-area mb-3 hide"></div>
+                    <form id="formTr" method="post">
+                        <div class="row mb-3">
+                            <div class="col-lg-3">
+                                <label for="idSer">Sender ID</label>
+                                <input type="text" name="idSer" id="idSer" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="senderName">Sender Name</label>
+                                <input type="text" name="senderName" id="senderName" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="emailSer">Sender Email</label>
+                                <input type="text" name="emailSer" id="emailSer" class="form-control" readonly>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="balanceSer">Sender Balance</label>
+                                <input type="text" name="balanceSer" id="balanceSer" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-3">
+                                <label for="recipient">Recipient Name</label>
+                                <select name="recipient" id="recipient" class="form-control">
+
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="amountTr">Transfer Amount</label>
+                                <input type="text" name="amountTr" id="amountTr" class="form-control">
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label for="fee">Fee(%)</label>
+                                <input type="text" name="fee" id="fee" class="form-control" readonly>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label for="totalAmount">Total Amount</label>
+                                <input type="text" name="totalAmount" id="totalAmount" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btnTransfer" id="btnTransfer">Transfer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Transfer Info-->
+    <!-- <div class="modal fade" id="modalTransferInfo">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal Transfer Info</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <table class="table table-striped">
+                        <tr style="background-color: #4caf50">
+                            <th>ID</th>
+                            <th>Sender Name</th>
+                            <th>Recipient Name</th>
+                            <th>Transfer Amount</th>
+                            <th>Fees</th>
+                            <th>Transaction Amount</th>
+                            <th>Date</th>
+                        </tr>
+                        <tbody id="history-body">
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+</body>
+<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/jquery/jquery-3.5.1.min.js"></script>
+<script src="/jquery/jquery.validate.min.js"></script>
+<script src="/web-toast/src/webToast.js"></script>
+<script src="/app-base.js"></script>
+
+<script>
+
+
+
+    const strBody = $('#tbCustomerBody');
+
+    const btnShowModalCreate = $('#btnShowModalCreate');
+    const formCreate = $('#formCreate');
+    const modalCreate = $('#modalCreate');
+    const fullNameCre = $('#fullNameCre');
+    const emailCre = $('#emailCre');
+    const phoneCre = $('#phoneCre');
+    const balanceCre = $('#balanceCre');
+    const addressCre = $('#addressCre');
+    const btnCreate = $('#btnCreate');
+
+    const modalUpdate = $('#modalUpdate');
+    const formUpdate = $('#formUpdate');
+    const addressUp = $('#addressUp');
+    const fullNameUp = $('#fullNameUp');
+    const emailUp = $('#emailUp');
+    const phoneUp = $('#phoneUp');
+    const btnUpdate = $('#btnUpdate');
+
+    const btnDeposit = $('#btnDeposit');
+    const modalDeposit = $('#modalDeposit');
+    const formDeposit = $('#formDes');
+    const idDep = $('#idDes');
+    const fullNameDep = $('#fullNameDes');
+    const emailDep = $('#emailDes');
+    const balanceDep = $('#balanceDes');
+    const transactionAmountDep = $('#amountDes');
+
+    const btnWithdraw = $('#btnWithdraw');
+    const modalWithdraw = $('#modalWithdraw');
+    const formWithdraw = $('#formWdr');
+    const idWdr = $('#idWdr');
+    const fullNameWdr = $('#fullNameWdr');
+    const emailWdr = $('#emailWdr');
+    const balanceWdr = $('#balanceWdr');
+    const transactionAmountWdr = $('#amountWdr');
+
+
+    const btnTransfer = $('#btnTransfer');
+    const modalTransfer = $('#modalTransfer');
+    const formTransfer = $('#formTr');
+    const senderName = $('#senderName');
+    const senderId = $('#idSer');
+    const senderEmail = $('#emailSer');
+    const senderBalance = $('#balanceSer');
+    const fee = $('#fee');
+    const selectOptionRecipientStr = $('#recipient');
+    const transferAmount = $('#amountTr');
+    const totalAmountTr = $('#totalAmount');
+
+    let persons = [];
+    // let histories = [];
+    // const strBodyHistory = $("#history-body");
+    // const btnHistory = $('#btnShowModalTransferInfo');
+    // const modalHistory = $('#modalTransferInfo');
+
+    const renderNameRecipient = (obj) => {
+        return `
+            <option value="${obj.id}">${obj.fullName}</option>
+        `
+    }
+
+    async function getAllPersons() {
+        // const response = await fetch("http://localhost:3300/persons");
+        // persons = await response.json();
+        // persons.forEach(item => {
+        //     const str = renderPerson(item);
+        //     strBody.append(str);
+
+        // });
+
+        return $.ajax({
+            type: 'GET',
+            url: 'http://localhost:3300/persons',
+            success: function (response) {
+                persons = response;
+                strBody.empty();
+
+                $.each(response, (index, item) => {
+                    const str = renderPerson(item);
+                    strBody.append(str);
+                })
+            }, error: function () {
+                webToast.Danger({
+                    status: 'Lỗi hệ thống',
+                    message: '',
+                    delay: 2000,
+                    align: 'topright'
+                });
+            }
+        })
+    }
+
+    async function getAllHistories() {
+        // const historiesRes = await fetch('http://localhost:3300/histories');
+        // histories = await historiesRes.json();
+        // histories.forEach(item => {
+        //     const str = renderHistory(item);
+        //     strBodyHistory.append(str);
+
+        // })
+
+        return $.ajax({
+            type: 'GET',
+            url: 'http://localhost:3300/histories',
+            success: function (response) {
+                histories = response;
+
+                $.each(response, (index, item) => {
+                    const str = renderHistory(item);
+                    strBodyHistory.append(str);
+                })
+            }, error: function () {
+                webToast.Danger({
+                    status: 'Lỗi hệ thống',
+                    message: '',
+                    delay: 2000,
+                    align: 'topright'
+                });
+            }
+        })
+    }
+
+    const renderHistory = (obj) => {
+        const date = new Date(obj.date);
+        const formattedDate = date.toLocaleString();
+        return `
+        <tr>
+                    <td>${obj.id}</td>
+                    <td>${obj.senderName}</td>
+                    <td>${obj.recipientName}</td>
+                    <td>${obj.transferAmount}</td>
+                    <td>${obj.fee}</td>
+                    <td>${obj.totalAmount}</td>
+                    <td>${formattedDate}</td>
+                </tr>
+                    `
+    }
+
+    const renderPerson = (obj) => {
+        return `
+        <tr id="tr_${obj.id}">
+                    <td>${obj.id}</td>
+                    <td>${obj.fullName}</td>
+                    <td>${obj.email}</td>
+                    <td>${obj.phone}</td>
+                    <td>${obj.balance}</td>
+                    <td>${obj.address}</td>
+                    <td>
+                        <button title = "Edit" class="btn btn-outline-secondary edit" data-id="${obj.id}">
+                            <i class="fas fa-user-edit"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button title = "Deposit" class="btn btn-outline-success deposit" data-id="${obj.id}">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button title = "Withdraw" class="btn btn-outline-warning withdraw" data-id = "${obj.id}">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button title = "Transfer" class="btn btn-outline-primary transfer" data-id = "${obj.id}">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button title = "Delete" class="btn btn-outline-danger delete" data-id="${obj.id}">
+                            <i class="fas fa-user-slash"></i>
+                        </button>
+                    </td>
+                </tr>
+        `
+    }
+
+    const createPerson = async () => {
+        btnCreate.attr('disabled', true);
+
+        let load = webToast.loading({
+            status: 'Loading...',
+            message: 'Please Wait a moment',
+            align: 'bottomright',
+            line: true,
+        });
+
+        let person = {
+            "id": null,
+            "fullName": fullNameCre.val(),
+            "email": emailCre.val(),
+            "address": emailCre.val(),
+            "phone": phoneCre.val(),
+            "balance": 0
+        };
+
+        setTimeout(() => {
+            $.ajax({
+                headers: {
+                    'accept': 'application/json',
+                    'content-type': 'application/json'
+                },
+                type: 'POST',
+                url: 'http://localhost:3300/persons',
+                data: JSON.stringify(person)
+            })
+                .done((data) => {
+                    getAllPersons();
+                    webToast.Success({
+                        status: 'Thêm thành công',
+                        message: '',
+                        delay: 2000,
+                        align: 'topright'
+                    });
+
+                })
+                .fail((error) => {
+                    console.log(error);
+                })
+                .always(() => {
+                    btnCreate.attr('disabled', false);
+
+                    modalCreate.modal('hide');
+
+                    load.remove();
+                })
+        }, 2000);
+
+
+
+        // const response = await fetch('http://localhost:3300/persons', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(person)
+        // })
+
+        // const personNew = await response.json();
+        // const str = renderPerson(personNew);
+        // // strBody.append(str);
+        // refreshData();
+
+        // webToast.Success({
+        //     status: 'Thêm thành công',
+        //     message: '',
+        //     delay: 2000,
+        //     align: 'topright'
+        // });
+
+        // btnCreate.attr('disabled', false);
+
+        // modalCreate.modal('hide');
+    }
+
+    const deletePerson = () => {
+        strBody.on('click', '.delete', function () {
+            const id = $(this).data('id');
+
+            var confirmBox = webToast.confirm("Are you sure you want to delete??");
+            confirmBox.click(async function () {
+                confirmBox.attr('disabled', true);
+
+                let load = webToast.loading({
+                    status: 'Loading...',
+                    message: 'Please Wait a moment',
+                    align: 'bottomright',
+                    line: true,
+                });
+
+                let person = {
+                    "id": id
+                }
+
+                setTimeout(() => {
+                    $.ajax({
+                        headers: {
+                            'accept': 'application/json',
+                            'content-type': 'application/json'
+                        },
+                        type: 'DELETE',
+                        url: 'http://localhost:3300/persons/' + id,
+                        data: JSON.stringify(person)
+                    })
+                        .done(() => {
+
+                            webToast.Success({
+                                status: 'Xóa thành công',
+                                message: '',
+                                delay: 2000,
+                                align: 'topright'
+                            });
+
+                            refreshData();
+
+                        })
+                        .fail((error) => {
+                            console.log(error);
+                        })
+                        .always(() => {
+                            confirmBox.attr('disable', false);
+                            load.remove();
+                        })
+                }, 2000)
+
+                // const reponse = await fetch('http://localhost:3300/persons/' + id, {
+                //     method: 'DELETE',
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify(person)
+                // })
+                // refreshData();
+
+                // webToast.Success({
+                //     status: 'Xóa thành công',
+                //     message: '',
+                //     delay: 2000,
+                //     align: 'topright'
+                // });
+                // confirmBox.attr('disable', false);
+
+
+            });
+
+        })
+    }
+
+    const showModalUpdate = () => {
+        strBody.on('click', '.edit', async function () {
+            resetForm('#formUpdate');
+
+            const id = $(this).data('id');
+
+            return $.ajax({
+                type: 'GET',
+                url: 'http://localhost:3300/persons/' + id,
+                success: function (res) {
+                    $('#idUp').val(res.id);
+                    $('#fullNameUp').val(res.fullName);
+                    $('#emailUp').val(res.email);
+                    $('#phoneUp').val(res.phone);
+                    $('#addressUp').val(res.address);
+                    $('#modalUpdate').modal('show')
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+
+            })
+
+            // const reponse = await fetch('http://localhost:3300/persons/' + id);
+            // const person = await reponse.json();
+
+
+            // $('#idUp').val(person.id);
+            // $('#fullNameUp').val(person.fullName);
+            // $('#emailUp').val(person.email);
+            // $('#phoneUp').val(person.phone);
+            // $('#addressUp').val(person.address);
+            // $('#modalUpdate').modal('show')
+        })
+    }
+
+    const showModalDeposit = () => {
+        strBody.on('click', '.deposit', async function () {
+            resetForm('#formDes');
+
+            const id = $(this).data('id');
+
+            return $.ajax({
+                type: 'GET',
+                url: 'http://localhost:3300/persons/' + id,
+                success: function (res) {
+                    idDep.val(res.id);
+                    fullNameDep.val(res.fullName);
+                    emailDep.val(res.email);
+                    balanceDep.val(res.balance);
+
+                    modalDeposit.modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+
+            // const reponse = await fetch('http://localhost:3300/persons/' + id);
+            // const person = await reponse.json();
+
+            // formDeposit.trigger('reset');
+
+            // idDep.val(person.id);
+            // fullNameDep.val(person.fullName);
+            // emailDep.val(person.email);
+            // balanceDep.val(person.balance);
+
+            // modalDeposit.modal('show');
+        })
+    }
+
+    const showModalWithdraw = () => {
+        strBody.on('click', '.withdraw', async function () {
+            resetForm('#formWdr')
+
+            const id = $(this).data('id');
+
+            return $.ajax({
+                type: 'GET',
+                url: 'http://localhost:3300/persons/' + id,
+                success: function (res) {
+                    idWdr.val(res.id);
+                    fullNameWdr.val(res.fullName);
+                    emailWdr.val(res.email);
+                    balanceWdr.val(res.balance);
+
+                    modalWithdraw.modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+
+            // const reponse = await fetch('http://localhost:3300/persons/' + id);
+            // const person = await reponse.json();
+
+            // formWithdraw.trigger('reset');
+
+            // idWdr.val(person.id);
+            // fullNameWdr.val(person.fullName);
+            // emailWdr.val(person.email);
+            // balanceWdr.val(person.balance);
+
+            // modalWithdraw.modal('show');
+        })
+    }
+
+    const showModalTransfer = () => {
+        strBody.on('click', '.transfer', async function () {
+            resetForm('#formTr');
+            totalAmountTr.val('');
+
+            const id = $(this).data('id');
+
+            return $.ajax({
+                type: 'GET',
+                url: 'http://localhost:3300/persons/' + id,
+                success: (res) => {
+                    senderName.val(res.fullName);
+                    senderId.val(res.id);
+                    senderEmail.val(res.email);
+                    senderBalance.val(res.balance);
+                    fee.val(10);
+
+                    transferAmount.val('');
+
+                    transferAmount.on('change', () => {
+                        let feeTr = parseFloat(fee.val());
+                        let amountTr = parseFloat(transferAmount.val());
+                        let totalAmount = Math.round(amountTr * (1 + feeTr / 100));
+                        totalAmountTr.val(totalAmount);
+                    })
+
+                    let filteredRecipient = persons.filter(function (item) {
+                        return item.id !== id;
+                    })
+
+                    selectOptionRecipientStr.empty();
+                    console.log(filteredRecipient);
+
+                    $.each(filteredRecipient, function (index, item) {
+                        let str = renderNameRecipient(item);
+                        selectOptionRecipientStr.append(str);
+                    })
+
+                    modalTransfer.modal('show');
+                },
+                error: (error) => {
+                    console.log(error);
+                }
+            })
+
+            // const senderRes = await fetch('http://localhost:3300/persons/' + id);
+            // const sender = await senderRes.json();
+
+            // senderName.val(sender.fullName);
+            // senderId.val(sender.id);
+            // senderEmail.val(sender.email);
+            // senderBalance.val(sender.balance);
+            // fee.val(10);
+
+            // transferAmount.val('');
+
+            // transferAmount.on('change', () => {
+            //     let feeTr = parseFloat(fee.val());
+            //     let amountTr = parseFloat(transferAmount.val());
+            //     let totalAmount = Math.round(amountTr * (1 + feeTr / 100));
+            //     totalAmountTr.val(totalAmount);
+            // })
+
+            // let filteredRecipient = persons.filter(function (item) {
+            //     return item.id !== id;
+            // })
+
+            // selectOptionRecipientStr.empty();
+            // console.log(filteredRecipient);
+
+            // $.each(filteredRecipient, function (index, item) {
+            //     let str = renderNameRecipient(item);
+            //     selectOptionRecipientStr.append(str);
+            // })
+
+            // modalTransfer.modal('show');
+        })
+    }
+
+    const getPersonById = (id) => {
+        return $.ajax({
+            url: 'http://localhost:3300/persons/' + id
+        })
+    }
+
+    const updatePerson = async () => {
+        btnUpdate.attr('disabled', true);
+        const id = $('#idUp').val();
+        // const res = await fetch('http://localhost:3300/persons/' + id);
+        // const personOld = await res.json();
+        let person = {};
+        getPersonById(id).then(async (data) => {
+            person = {
+                "id": id,
+                "fullName": fullNameUp.val(),
+                "email": emailUp.val(),
+                "phone": phoneUp.val(),
+                "address": addressUp.val(),
+                "balance": data.balance
+            }
+
+            let load = webToast.loading({
+                status: 'Loading...',
+                message: 'Please Wait a moment',
+                align: 'bottomright',
+                line: true,
+            });
+
+            setTimeout(() => {
+                $.ajax({
+                    headers: {
+                        'accept': 'application/json',
+                        'content-type': 'application/json',
+                    },
+                    type: 'PUT',
+                    url: 'http://localhost:3300/persons/' + id,
+                    data: JSON.stringify(person)
+                })
+                    .done(() => {
+                        refreshData();
+
+                        webToast.Success({
+                            status: 'Cập nhật thành công',
+                            message: '',
+                            delay: 2000,
+                            align: 'topright'
+                        })
+
+                    })
+                    .fail((error) => {
+                        console.log(error);
+                    })
+                    .always(() => {
+                        modalUpdate.modal('hide');
+                        btnUpdate.attr('disabled', false);
+                        load.remove();
+                    })
+            }, 2000);
+        })
+
+    }
+
+    const deposit = async () => {
+        const transactionAmount = parseInt(transactionAmountDep.val());
+        const balance = parseInt(balanceDep.val()) + transactionAmount;
+
+        if (transactionAmount < 10000) {
+            const message = "Số tiến nạp tối thiểu là 10.000";
+            $('.error-area').empty().append(message).removeClass('hide');
+        } else if (transactionAmount > 500000000) {
+            const message = "Số tiến nạp tối đa là 500.000.000";
+            $('.error-area').empty().append(message).removeClass('hide');
+        } else if (balance > 10000000000) {
+            const message = "Tài khoản của bạn vượt mức giới hạn 10.000.000.000";
+            $('.error-area').empty().append(message).removeClass('hide');
+        } else {
+            let person = {
+                "balance": balance
+            }
+
+            const reponse = await fetch('http://localhost:3300/persons/' + idDep.val(), {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(person)
+            })
+
+            modalDeposit.modal('hide');
+            refreshData();
+            webToast.Success({
+                status: 'Nạp tiền thành công',
+                message: '',
+                delay: 2000,
+                align: 'topright'
+            });
+        }
+
+    }
+
+    const withdraw = async () => {
+        const transactionAmount = parseInt(transactionAmountWdr.val());
+        const balance = parseInt(balanceWdr.val()) - transactionAmount;
+
+        if (balance <= 0) {
+            const message = "Số tiến trong tài khoản không đủ để rút";
+            $('.error-area').empty().append(message).removeClass('hide');
+
+        } else if (transactionAmount < 10000) {
+            const message = "Số tiến rút tối thiểu là 10.000";
+            $('.error-area').empty().append(message).removeClass('hide');
+        } else if (transactionAmount > 50000000) {
+            const message = "Số tiến rút tối đa là 50.000.000";
+            $('.error-area').empty().append(message).removeClass('hide');
+        } else {
+            let person = {
+                "balance": balance
+            }
+
+            const reponse = await fetch('http://localhost:3300/persons/' + idWdr.val(), {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(person)
+            })
+
+            modalWithdraw.modal('hide');
+            refreshData();
+            webToast.Success({
+                status: 'Rút tiền thành công',
+                message: '',
+                delay: 2000,
+                align: 'topright'
+            });
+
+        }
+
+
+    }
+
+    const transfer = async () => {
+        const idSender = senderId.val();
+        const recipientId = selectOptionRecipientStr.val();
+        const amountTr = transferAmount.val();
+        const totalAmount = totalAmountTr.val();
+
+        const senderRes = await fetch('http://localhost:3300/persons/' + idSender);
+        const sender = await senderRes.json();
+
+        const recipientRes = await fetch('http://localhost:3300/persons/' + recipientId);
+        const recipient = await recipientRes.json();
+
+        const balanceSenderNew = parseFloat(sender.balance) - parseFloat(totalAmount);
+        const balanceRecipientNew = parseFloat(recipient.balance) + parseFloat(amountTr);
+
+        if (balanceSenderNew <= 0) {
+            const message = "Tài khoản không đủ tiền để chuyển";
+            $('.error-area').empty().append(message).removeClass('hide');
+        } else if(parseFloat(amountTr) < 10000) {
+            const message = "Số tiền chuyển tối thiểu là 10.000";
+            $('.error-area').empty().append(message).removeClass('hide');
+        } else if(parseFloat(amountTr) > 100000000) {
+            const message = "Số tiền chuyển tối đa là 100.000.000";
+            $('.error-area').empty().append(message).removeClass('hide');
+        }else {
+            const personSender = {
+                "balance": balanceSenderNew
+            }
+
+            const personRecipient = {
+                "balance": balanceRecipientNew
+            }
+
+            const reponseSer = await fetch('http://localhost:3300/persons/' + idSender, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(personSender)
+            })
+            const senderNew = await reponseSer.json();
+
+            const reponseRep = await fetch('http://localhost:3300/persons/' + recipientId, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(personRecipient)
+            })
+            const recipientNew = await reponseRep.json();
+
+            const strS = renderPerson(senderNew);
+            const currentRowS = $('#tr_' + idSender);
+            currentRowS.replaceWith(strS);
+
+            const strR = renderPerson(recipientNew);
+            const currentRowR = $('#tr_' + recipientId);
+            currentRowR.replaceWith(strR);
+
+            webToast.Success({
+                status: 'Chuyển tiền thành công',
+                message: '',
+                delay: 2000,
+                align: 'topright'
+            });
+
+            modalTransfer.modal('hide');
+
+            const history = {
+                senderName: senderNew.fullName,
+                recipientName: recipientNew.fullName,
+                transferAmount: amountTr,
+                fee: fee.val(),
+                totalAmount: totalAmount,
+                date: new Date()
+            }
+
+
+            const responseHistory = await fetch('http://localhost:3300/histories', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(history)
+            })
+
+
+        }
+
+    }
+
+
+    formCreate.validate({
+        rules: {
+            fullNameCre: {
+                required: true,
+                minlength: 5,
+                maxlength: 25
+            },
+            emailCre: {
+                required: true,
+                isEmail: true
+            },
+            phoneCre: {
+                required: true,
+
+            }
+        },
+        messages: {
+            fullNameCre: {
+                required: 'Vui lòng nhập họ tên đầy đủ',
+                minlength: 'Họ tên tối thiểu là 5 ký tự',
+                maxlength: 'Họ tên tối đa là 25 ký tự'
+            },
+            emailCre: {
+                required: 'Vui lòng nhập email đầy đủ',
+            },
+            phoneCre: {
+                required: 'Vui lòng nhập phone đầy đủ'
+
+            }
+        },
+        submitHandler: function () {
+            createPerson();
+        }
+    })
+
+    formUpdate.validate({
+        rules: {
+            fullNameUp: {
+                required: true,
+                minlength: 5,
+                maxlength: 25
+            },
+            emailUp: {
+                required: true,
+                isEmail: true
+            },
+            phoneUp: {
+                required: true,
+
+            },
+            addressUp: {
+                required: true
+            }
+        },
+        messages: {
+            fullNameUp: {
+                required: 'Vui lòng nhập họ tên đầy đủ',
+                minlength: 'Họ tên tối thiểu là 5 ký tự',
+                maxlength: 'Họ tên tối đa là 25 ký tự'
+            },
+            emailUp: {
+                required: 'Vui lòng nhập email đầy đủ',
+            },
+            phoneUp: {
+                required: 'Vui lòng nhập phone đầy đủ'
+
+            },
+            addressUp: {
+                required: 'Vui lòng nhập địa chỉ đầy đủ'
+            }
+        },
+        submitHandler: function () {
+            updatePerson();
+
+        }
+    })
+
+    formDeposit.validate({
+        rules: {
+            amountDes: {
+                required: true,
+                isNumber: true,
+                max: 100000000,
+                min: 10000
+            }
+        },
+        messages: {
+            amountDes: {
+                required: 'Vui lòng nhập tiền giao dịch',
+                max : "Số tiền nạp tối đa 100.000.000",
+                min: "Số tiền nạp tối thiểu 10.000"
+            }
+        },
+        submitHandler: function () {
+            deposit();
+        }
+    })
+
+    formWithdraw.validate({
+        rules: {
+            amountWdr: {
+                required: true,
+                isNumber: true,
+                max: 20000000,
+                min: 10000
+            }
+        },
+        messages: {
+            amountWdr: {
+                required: 'Vui lòng nhập tiền giao dịch',
+                max : "Số tiền rút tối đa 20.000.000",
+                min: "Số tiền rút tối thiểu 10.000"
+            }
+        },
+        submitHandler: function () {
+            withdraw();
+        }
+    })
+
+    formTransfer.validate({
+        rules: {
+            amountTr: {
+                required: true,
+                isNumber: true,
+                max: 100000000,
+                min: 10000
+            }
+        },
+        messages: {
+            amountTr: {
+                required: 'Vui lòng nhập tiền giao dịch',
+                max : "Số chuyển rút tối đa 100.000.000",
+                min: "Số chuyển rút tối thiểu 10.000"
+            }
+        },
+        submitHandler: function () {
+            transfer();
+        }
+    })
+
+
+    $.validator.addMethod("isEmail", function (value, element) {
+        return this.optional(element) || /^[a-z]+@[a-z]+\.[a-z]+$/i.test(value);
+    }, "Vui lòng nhập đúng định dạng email");
+
+    $.validator.addMethod("isNumber", function (value, element) {
+        return this.optional(element) || /^[0-9]*$/i.test(value);
+    }, "Vui lòng nhập tiền giao dịch bằng ký tự số");
+
+
+    const refreshData = () => {
+        strBody.empty();
+        getAllPersons();
+    };
+
+    const resetForm = (elem) => {
+        $(elem).trigger('reset');
+        $(`${elem} label.error`).remove();
+        $(`${elem} input`).removeClass('error');
+        $('.error-area').empty()
+    }
+
+    $(() => {
+
+        getAllPersons();
+
+        deletePerson();
+
+        showModalUpdate();
+
+        showModalDeposit();
+
+        showModalWithdraw();
+
+        showModalTransfer();
+
+        // btnHistory.on('click', () => {
+        //     strBodyHistory.empty();
+        //     getAllHistories();
+        //     modalHistory.modal('show')
+        // })
+
+        btnShowModalCreate.on('click', () => {
+            // formCreate.validate().resetForm();
+            resetForm('#formCreate');
+            modalCreate.modal('show');
+        })
+
+        btnCreate.on('click', () => {
+            formCreate.trigger('submit');
+
+        })
+
+        btnUpdate.on('click', () => {
+            formUpdate.trigger('submit');
+        })
+
+        btnDeposit.on('click', () => {
+            formDeposit.trigger('submit');
+        })
+
+        btnWithdraw.on('click', () => {
+            formWithdraw.trigger('submit');
+        })
+
+        btnTransfer.on('click', () => {
+            formTransfer.trigger('submit');
+        })
+
+    })
+
+
+
+
+
+</script>
+
+</html>
